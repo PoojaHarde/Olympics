@@ -1,60 +1,84 @@
-# Data Visualisation of 120 Years of  Olympics Record
-A Django and symentics web based open source webapp to visualise Data of Olympics .
 
-## Screenshots 
+# OlyGraph and Olympics Web Application
+This project is about converting a plain CSV data into a linked data where all the entities are linked to each other and then creating a web application which will use that linked data .
+OlyGraph is the ontology which has been used in this project to map different entities and relation . The knowledge Graph consist triples in the form of subject , predicate and object  where the predicate define the relationship between the subject and the object . After creation of the knowledge graph , we use the following knowledge graph into our django based web application as database using SPARQLWrapper and use sparql queries to retrieve data from the knowledge graph . 
+## URL
 
-![App Screenshot](https://i.ibb.co/TWrRQTC/1.png)
-![App Screenshot](https://i.ibb.co/4WTTHD6/2.png)
-![App Screenshot](https://i.ibb.co/ZVZ3SQC/3.png)
-![App Screenshot](https://i.ibb.co/jVPYY9K/4.png)
-![App Screenshot](https://i.ibb.co/KwxxXkz/5.png)
-![App Screenshot](https://i.ibb.co/SKcY3vz/6.png)
-![App Screenshot](https://i.ibb.co/rpKLrR4/7.png)
-![App Screenshot](https://i.ibb.co/tJWgWzF/8.png)
-![App Screenshot](https://i.ibb.co/fQDVfrr/9.png)
-![App Screenshot](https://i.ibb.co/VVwWY4R/10.png)
+* [https://olympicsapplication.herokuapp.com/](https://olympicsapplication.herokuapp.com/)
+## Authors
+***
+* Sarika Jain 
+* Nandana Mihindukulasooriya
+* Pooja Harde 
+* Ankush Bisht 
 
-
-## Python Libraries
-
- - [DJANGO](https://www.djangoproject.com/)
- - [tailwindcss](https://tailwindcss.com/)
- - [SPARQLWrapper](https://libraries.io/pypi/SPARQLWrapper)
- 
+## Data Source
+***
+*   [Olympics Data in CSV](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results)
+*   [RDF Turtle File](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results)
 
 
-## Semantic Web
+##  Libraries Used
+****
+* [Django](https://www.djangoproject.com/) - It is an free and Open-Source Web Development Framework in python which is used to create the backend of any application .
+* [SPARQLWrapper](https://libraries.io/pypi/SPARQLWrapper) - It is an Open-Source python based library which is  used to query rdf data in python .
+* [Tailwind CSS](https://tailwindcss.com/) - This is a CSS based library used to beautify your html document using pre-defined CSS classes .
+* [YASQE](https://github.com/pkleef/YASGUI.YASQE) - YASQE (Yet Another SPARQL Query Editor) is part of the the YASGUI suite of SPARQL tools. .
 
- - [Introduction](https://medium.com/wallscope/tackling-big-data-challenges-with-linked-data-278b0761a6de)
- - [Creating Linked Data ](https://medium.com/wallscope/creating-linked-data-31c7dd479a9e/)
- - [SPARQL Queries ](https://www.youtube.com/playlist?list=PLea0WJq13cnA6k4B6Tr1ljj2nleUl9dZt)
- 
+## SPARQLWrapper
+****
+It is the python based library used to connect your turtle file with django backend so that we can query the data inside the triple using python .
 
-## Data Source 
-- [Olympics Turtle File](https://github.com/wallscope/olympics-rdf)
+### Sample Code
+```python 
+from SPARQLWrapper import SPARQLWrapper, JSON
+
+sparql = SPARQLWrapper(
+    "http://vocabs.ardc.edu.au/repository/api/sparql/"
+    "csiro_international-chronostratigraphic-chart_geologic-time-scale-2020"
+)
+sparql.setReturnFormat(JSON)
+
+# gets the first 3 geological ages
+# from a Geological Timescale database,
+# via a SPARQL endpoint
+sparql.setQuery("""
+    PREFIX gts: <http://resource.geosciml.org/ontology/timescale/gts#>
+
+    SELECT *
+    WHERE {
+        ?a a gts:Age .
+    }
+    ORDER BY ?a
+    LIMIT 3
+    """
+)
+
+try:
+    ret = sparql.queryAndConvert()
+
+    for r in ret["results"]["bindings"]:
+        print(r)
+except Exception as e:
+    print(e)
+
+```
+
+
+
+
+## Sparql 
+Few examples of the sparql queries that we have used in our project are - 
+1. Top 10 Oldest athlete 
+![App Screenshot](https://i.ibb.co/ggkj2w0/1.png)
 
 ## Environment Variables
-
 To run this project, you will need to add the following environment variables to your .env file
 - SECRET_KEY= Secret key of your django project
 - DEBUG = "False"
 - ALLOWED_HOSTS = ""
 
-
-
-## Running blazegraph Server 
-- ### Note - Before running blazeraph you system must have java installed in it .
-
-- [Download blazegraph](https://github.com/blazegraph/database/releases/tag/BLAZEGRAPH_2_1_6_RC)
-
-- Go to the directory where blazegraph jar file is stored
-```bash
-  java -server -Xmx4g -jar blazegraph.jar
-```
-- Blazegraph will now be running on port 9999 . Run the port in your browser and load the olympic turtle rdf file .
-    
-## Run Locally
-
+## Run The Project Locally 
 Clone the project
 
 ```bash
@@ -80,7 +104,21 @@ Start the server
 ```
 
 
-## Lessons Learned
+## Acknowledgements
+This work is supported by the IHUB-ANUBHUTI-IIITD FOUNDATION set up under the NM-ICPS scheme of the Department of Science and Technology, India.
 
-By making the following Project I explored the new way of storing and quering data and learned the importance of semantic web over traditional data storage techniques . 
-Know more About Symentic Web and Linked Data - https://www.youtube.com/playlist?list=PLea0WJq13cnDDe8V7eVLReIaOnFztOEAq
+
+## Contacts
+### Dr. Sarika Jain  (National Institute of Technology, Kurukshetra, India ) 
+-  Email - jasarika@nitkkr.ac.in
+
+### Nandana Mihindukulasooriya (IBM Research, Dublin, Ireland) 
+-  Email - nandana@ibm.com
+
+### Pooja Harde (National Institute of Technology, Kurukshetra, India ) 
+-  Email - pmharde29@gmail.com
+
+### Ankush Bisht (University of Delhi, India ) 
+-  Email - ankushbisht72@gmail.com
+
+
