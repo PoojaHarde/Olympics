@@ -9,7 +9,7 @@ OlyGraph is the ontology which has been used in this project to map different en
 ***
 * Sarika Jain 
 * Nandana Mihindukulasooriya
-* Pooja Harde 
+* (https://github.com/PoojaHarde)Pooja Harde 
 * Ankush Bisht 
 
 ## Data Source
